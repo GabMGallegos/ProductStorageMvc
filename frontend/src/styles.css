@@ -294,3 +294,135 @@ body {
 .delete-summary p {
     margin: 8px 0;
 }
+
+.table-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.small-button {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.edit-button {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.edit-button:hover {
+    background-color: #bfdbfe;
+}
+
+.delete-button {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.delete-button:hover {
+    background-color: #fecaca;
+}
+
+.danger-button {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #dc2626;
+    color: white;
+}
+
+.danger-button:hover {
+    background-color: #b91c1c;
+}
+
+.delete-summary {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 22px;
+}
+
+.delete-summary p {
+    margin: 8px 0;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 1000;
+}
+
+.modal-overlay.modal-visible {
+    display: flex;
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 620px;
+    background-color: white;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.modal-close {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    background-color: #e5e7eb;
+    color: #111827;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    background-color: #d1d5db;
+}
+
+.modal-description {
+    margin: 0 0 22px 0;
+    color: #6b7280;
+}
+
+@media (max-width: 700px) {
+    .modal-card {
+        padding: 22px;
+    }
+
+    .modal-header h2 {
+        font-size: 24px;
+    }
+}

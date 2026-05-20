@@ -59,28 +59,14 @@ namespace ProductStorageMvc.Controllers
             return View(viewModel);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            ProductEditViewModel? viewModel = await _productService.GetProductForEditAsync(id);
-
-            if (viewModel == null)
-            {
-                TempData["ErrorMessage"] = "The selected product was not found.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(viewModel);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ProductEditViewModel viewModel)
+        public async Task<IActionResult> EditFromModal(ProductEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.ErrorMessage = "Please check the entered data before updating the product.";
-                return View(viewModel);
+                TempData["ErrorMessage"] = "The product could not be updated because the entered data is invalid.";
+                return RedirectToAction(nameof(Index));
             }
 
             try
@@ -89,8 +75,8 @@ namespace ProductStorageMvc.Controllers
 
                 if (!updated)
                 {
-                    ViewBag.ErrorMessage = "The selected product was not found.";
-                    return View(viewModel);
+                    TempData["ErrorMessage"] = "The selected product was not found.";
+                    return RedirectToAction(nameof(Index));
                 }
 
                 TempData["SuccessMessage"] = "Product updated successfully.";
@@ -98,28 +84,14 @@ namespace ProductStorageMvc.Controllers
             }
             catch
             {
-                ViewBag.ErrorMessage = "The product could not be updated. Please try again.";
-                return View(viewModel);
-            }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            ProductRowViewModel? viewModel = await _productService.GetProductForDeleteAsync(id);
-
-            if (viewModel == null)
-            {
-                TempData["ErrorMessage"] = "The selected product was not found.";
+                TempData["ErrorMessage"] = "The product could not be updated. Please try again.";
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteFromModal(int id)
         {
             try
             {
