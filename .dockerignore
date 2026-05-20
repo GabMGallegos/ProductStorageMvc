@@ -1,0 +1,11 @@
+**/.git
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/node_modules
+**/package-lock.json
+**/.env
+**/*.user
+**/*.suo
+**/TestResults

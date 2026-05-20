@@ -1,0 +1,70 @@
+@model ProductStorageMvc.ViewModels.ProductListViewModel
+
+@{
+    ViewData["Title"] = "Product List";
+}
+
+<section class="card">
+    <div class="card-header">
+        <h1>Product List</h1>
+        <p>View all registered products and their calculated totals.</p>
+    </div>
+
+    <div class="summary-grid">
+        <div class="summary-card">
+            <span class="summary-label">Total Quantity</span>
+            <strong class="summary-value">@Model.TotalQuantity</strong>
+        </div>
+
+        <div class="summary-card">
+            <span class="summary-label">Total Inventory Value</span>
+            <strong class="summary-value">$@Model.TotalInventoryValue.ToString("0.00")</strong>
+        </div>
+    </div>
+
+    @if (Model.Products.Count == 0)
+    {
+        <div class="empty-state">
+            <p>No products have been registered yet.</p>
+
+            <a asp-controller="Products" asp-action="Create" class="primary-button">
+                Add First Product
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrapper">
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total Value</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var product in Model.Products)
+                    {
+                        <tr>
+                            <td>@product.Id</td>
+                            <td>@product.Name</td>
+                            <td>$@product.Price.ToString("0.00")</td>
+                            <td>@product.Quantity</td>
+                            <td>$@product.TotalValue.ToString("0.00")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-actions">
+            <a asp-controller="Products" asp-action="Create" class="primary-button">
+                Add Another Product
+            </a>
+        </div>
+    }
+</section>
