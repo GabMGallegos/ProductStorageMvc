@@ -1,35 +1,44 @@
-# ---------- Frontend build stage ----------
-FROM node:22-alpine AS frontend-build
-WORKDIR /src
-
-COPY package*.json ./
-COPY vite.config.js ./
-COPY frontend ./frontend
-
-RUN npm config set registry https://registry.npmjs.org/ \
-    && npm install \
-    && npm run build
-
-# ---------- .NET publish stage ----------
+# =========================
+# Build stage
+# =========================
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
 WORKDIR /src
 
-COPY ProductStorageMvc.csproj ./
-RUN dotnet restore "ProductStorageMvc.csproj"
+# Install Node.js for Vite build
+RUN apt-get update && \
+    apt-get install -y curl ca-certificates && \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY . ./
-COPY --from=frontend-build /src/wwwroot/dist ./wwwroot/dist
+COPY . .
 
-RUN dotnet publish "ProductStorageMvc.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet restore
 
-# ---------- Runtime stage ----------
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
+RUN npm install
+RUN npm run build
+
+RUN dotnet publish -c Release -o /app/publish
+
+
+# =========================
+# Runtime stage
+# =========================
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+
 WORKDIR /app
 
-ENV ASPNETCORE_ENVIRONMENT=Production
-ENV ASPNETCORE_URLS=http://0.0.0.0:10000
-EXPOSE 10000
+# Required by Npgsql/PostgreSQL connections in Linux containers
+RUN apt-get update && \
+    apt-get install -y libkrb5-3 ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/publish .
+
+ENV ASPNETCORE_URLS=http://0.0.0.0:10000
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+EXPOSE 10000
 
 ENTRYPOINT ["dotnet", "ProductStorageMvc.dll"]
