@@ -30,28 +30,112 @@ namespace ProductStorageMvc.Services
         public async Task<ProductListViewModel> GetProductListAsync()
         {
             List<Product> products = await _context.Products
+                .AsNoTracking()
                 .OrderBy(product => product.Id)
                 .ToListAsync();
 
-            List<ProductRowViewModel> productRows = products
-                .Select(product => new ProductRowViewModel
+            ProductListViewModel viewModel = new ProductListViewModel();
+
+            foreach (Product product in products)
+            {
+                decimal totalValue = product.Price * product.Quantity;
+
+                ProductRowViewModel row = new ProductRowViewModel
                 {
                     Id = product.Id,
                     Name = product.Name,
                     Price = product.Price,
                     Quantity = product.Quantity,
-                    TotalValue = product.Price * product.Quantity
-                })
-                .ToList();
+                    TotalValue = totalValue
+                };
 
-            ProductListViewModel viewModel = new ProductListViewModel
+                viewModel.Products.Add(row);
+            }
+
+            viewModel.TotalQuantity = viewModel.Products.Sum(product => product.Quantity);
+            viewModel.TotalInventoryValue = viewModel.Products.Sum(product => product.TotalValue);
+
+            return viewModel;
+        }
+
+        public async Task<ProductEditViewModel?> GetProductForEditAsync(int id)
+        {
+            Product? product = await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(product => product.Id == id);
+
+            if (product == null)
             {
-                Products = productRows,
-                TotalQuantity = productRows.Sum(product => product.Quantity),
-                TotalInventoryValue = productRows.Sum(product => product.TotalValue)
+                return null;
+            }
+
+            ProductEditViewModel viewModel = new ProductEditViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Quantity = product.Quantity
             };
 
             return viewModel;
+        }
+
+        public async Task<bool> UpdateProductAsync(ProductEditViewModel viewModel)
+        {
+            Product? product = await _context.Products
+                .FirstOrDefaultAsync(product => product.Id == viewModel.Id);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            product.Name = viewModel.Name.Trim();
+            product.Price = viewModel.Price;
+            product.Quantity = viewModel.Quantity;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<ProductRowViewModel?> GetProductForDeleteAsync(int id)
+        {
+            Product? product = await _context.Products
+                .AsNoTracking()
+                .FirstOrDefaultAsync(product => product.Id == id);
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            ProductRowViewModel viewModel = new ProductRowViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Quantity = product.Quantity,
+                TotalValue = product.Price * product.Quantity
+            };
+
+            return viewModel;
+        }
+
+        public async Task<bool> DeleteProductAsync(int id)
+        {
+            Product? product = await _context.Products
+                .FirstOrDefaultAsync(product => product.Id == id);
+
+            if (product == null)
+            {
+                return false;
+            }
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

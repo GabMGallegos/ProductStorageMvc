@@ -232,3 +232,65 @@ body {
     border: 1px solid #fca5a5;
     color: #991b1b;
 }
+
+.table-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.small-button {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.edit-button {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.edit-button:hover {
+    background-color: #bfdbfe;
+}
+
+.delete-button {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.delete-button:hover {
+    background-color: #fecaca;
+}
+
+.danger-button {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #dc2626;
+    color: white;
+}
+
+.danger-button:hover {
+    background-color: #b91c1c;
+}
+
+.delete-summary {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 22px;
+}
+
+.delete-summary p {
+    margin: 8px 0;
+}

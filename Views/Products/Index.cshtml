@@ -10,6 +10,20 @@
         <p>View all registered products and their calculated totals.</p>
     </div>
 
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-error">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     <div class="summary-grid">
         <div class="summary-card">
             <span class="summary-label">Total Quantity</span>
@@ -18,11 +32,11 @@
 
         <div class="summary-card">
             <span class="summary-label">Total Inventory Value</span>
-            <strong class="summary-value">$@Model.TotalInventoryValue.ToString("0.00")</strong>
+            <strong class="summary-value">$@Model.TotalInventoryValue.ToString("F2")</strong>
         </div>
     </div>
 
-    @if (Model.Products.Count == 0)
+    @if (Model.Products == null || Model.Products.Count == 0)
     {
         <div class="empty-state">
             <p>No products have been registered yet.</p>
@@ -43,6 +57,7 @@
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Total Value</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
 
@@ -52,9 +67,26 @@
                         <tr>
                             <td>@product.Id</td>
                             <td>@product.Name</td>
-                            <td>$@product.Price.ToString("0.00")</td>
+                            <td>$@product.Price.ToString("F2")</td>
                             <td>@product.Quantity</td>
-                            <td>$@product.TotalValue.ToString("0.00")</td>
+                            <td>$@product.TotalValue.ToString("F2")</td>
+                            <td>
+                                <div class="table-actions">
+                                    <a asp-controller="Products"
+                                       asp-action="Edit"
+                                       asp-route-id="@product.Id"
+                                       class="small-button edit-button">
+                                        Edit
+                                    </a>
+
+                                    <a asp-controller="Products"
+                                       asp-action="Delete"
+                                       asp-route-id="@product.Id"
+                                       class="small-button delete-button">
+                                        Delete
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     }
                 </tbody>
