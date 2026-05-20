@@ -24,7 +24,11 @@
         </div>
     }
 
-    <form asp-controller="Products" asp-action="Create" method="post" class="product-form">
+    <form asp-controller="Products"
+          asp-action="Create"
+          method="post"
+          class="product-form"
+          novalidate>
         @Html.AntiForgeryToken()
 
         <div class="form-group">
