@@ -27,12 +27,28 @@ namespace ProductStorageMvc.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.ErrorMessage = "Please check the entered data before saving the product.";
                 return View(viewModel);
             }
 
-            await _productService.CreateProductAsync(viewModel);
+            try
+            {
+                await _productService.CreateProductAsync(viewModel);
 
-            return RedirectToAction(nameof(Index));
+                ModelState.Clear();
+
+                ViewBag.SuccessMessage = "Product saved successfully.";
+
+                ProductCreateViewModel cleanViewModel = new ProductCreateViewModel();
+
+                return View(cleanViewModel);
+            }
+            catch
+            {
+                ViewBag.ErrorMessage = "The product could not be saved. Please try again.";
+
+                return View(viewModel);
+            }
         }
 
         [HttpGet]
